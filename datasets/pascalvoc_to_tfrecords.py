@@ -62,7 +62,7 @@ from datasets.pascalvoc_common import VOC_LABELS
 DIRECTORY_ANNOTATIONS = 'Annotations/'
 DIRECTORY_IMAGES = 'JPEGImages/'
 
-# TFRecords convertion parameters.
+# TFRecords conversion parameters.
 RANDOM_SEED = 4242
 SAMPLES_PER_FILES = 200
 
@@ -80,7 +80,7 @@ def _process_image(directory, name):
     """
     # Read the image file.
     filename = directory + DIRECTORY_IMAGES + name + '.jpg'
-    image_data = tf.gfile.FastGFile(filename, 'r').read()
+    image_data = tf.gfile.FastGFile(filename, 'rb').read()
 
     # Read the XML annotation file.
     filename = os.path.join(directory, DIRECTORY_ANNOTATIONS, name + '.xml')
@@ -113,10 +113,15 @@ def _process_image(directory, name):
             truncated.append(0)
 
         bbox = obj.find('bndbox')
-        bboxes.append((float(bbox.find('ymin').text) / shape[0],
-                       float(bbox.find('xmin').text) / shape[1],
-                       float(bbox.find('ymax').text) / shape[0],
-                       float(bbox.find('xmax').text) / shape[1]
+        # bboxes.append((float(bbox.find('ymin').text) / shape[0],
+        #                float(bbox.find('xmin').text) / shape[1],
+        #                float(bbox.find('ymax').text) / shape[0],
+        #                float(bbox.find('xmax').text) / shape[1]
+        #                ))
+        bboxes.append((min(max(float(bbox.find('ymin').text) / shape[0], 0.0), 1.0),
+                       min(max(float(bbox.find('xmin').text) / shape[1], 0.0), 1.0),
+                       max(min(float(bbox.find('ymax').text) / shape[0], 1.0), 0.0),
+                       max(min(float(bbox.find('xmax').text) / shape[1], 1.0), 0.0)
                        ))
     return image_data, shape, bboxes, labels, labels_text, difficult, truncated
 
@@ -215,6 +220,9 @@ def run(dataset_dir, output_dir, name='voc_train', shuffling=False):
 
                 filename = filenames[i]
                 img_name = filename[:-4]
+                if img_name.startswith('.'):
+                    i += 1
+                    continue
                 _add_to_tfrecord(dataset_dir, img_name, tfrecord_writer)
                 i += 1
                 j += 1

@@ -16,9 +16,11 @@ checkpoints/vgg_16.ckpt
 checkpoints/model.ckpt-*
 
 logs/
+.idea/
+tfrecords/
+af2019/
 *.log
 nohup.out
 
 ssd-tensorflow.sublime-workspace
 ssd-tensorflow.sublime-project
-

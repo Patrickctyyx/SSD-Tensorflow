@@ -24,6 +24,9 @@ import tf_utils
 
 slim = tf.contrib.slim
 
+# if cpu
+# DATA_FORMAT = 'NHWC'
+# if gpu
 DATA_FORMAT = 'NCHW'
 
 # =========================================================================== #
@@ -151,7 +154,7 @@ tf.app.flags.DEFINE_integer(
     'batch_size', 32, 'The number of samples in each batch.')
 tf.app.flags.DEFINE_integer(
     'train_image_size', None, 'Train image size')
-tf.app.flags.DEFINE_integer('max_number_of_steps', None,
+tf.app.flags.DEFINE_integer('max_number_of_steps', 50000,
                             'The maximum number of training steps.')
 
 # =========================================================================== #
