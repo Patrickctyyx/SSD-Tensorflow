@@ -2,7 +2,7 @@
 export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 export CUDA_HOME=/usr/local/cuda
-DATASET_DIR=./tfrecords
+DATASET_DIR=./tfrecords/train
 TRAIN_DIR=./logs/
 CHECKPOINT_PATH=./checkpoints/ssd_300_vgg.ckpt
 nohup python3 -u train_ssd_network.py \
